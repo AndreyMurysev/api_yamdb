@@ -149,4 +149,4 @@ dmypy.json
 media/
 .venv
 .vs
-.static
+static/
