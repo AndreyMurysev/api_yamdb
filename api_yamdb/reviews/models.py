@@ -1,4 +1,7 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from users.models import User
 
 
 class Category(models.Model):
@@ -80,5 +83,65 @@ class Title(models.Model):
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
         ordering = ['name']
+
+
+class Review(models.Model):
+    title_id = models.ForeignKey(
+        Title,
+        verbose_name='Произведение',
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        blank=False,
+        null=False
+    )
+    text = models.TextField('Текст отзыва')
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    score = models.IntegerField(
+        'Оценка',
+        default=5,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ]
+    )
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        ordering = ['-pub_date']
+
+
+class Comments(models.Model):
+    review_id = models.ForeignKey(
+        Review,
+        verbose_name='Отзыв',
+        on_delete=models.CASCADE,
+        related_name='comments',
+        blank=False,
+        null=False
+    )
+    text = models.TextField('Текст комментария')
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-pub_date']
 
 
