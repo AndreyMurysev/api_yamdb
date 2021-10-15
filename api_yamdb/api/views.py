@@ -21,17 +21,17 @@ class DestroyCreateListViewSet(
     pass
 
 
-class CategoryViewSet(DestroyCreateListViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class GenreViewSet(DestroyCreateListViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
 
 
-class GenreViewSet(DestroyCreateListViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
+class CategoryViewSet(DestroyCreateListViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
@@ -42,6 +42,3 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
-
-
-
