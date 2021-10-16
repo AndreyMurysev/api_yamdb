@@ -3,15 +3,35 @@ from django.contrib.auth.models import AbstractUser
 
 
 USER_ROLES = [
-    ('u', 'user'),
-    ('m', 'moderator'),
-    ('a', 'admin'),]
+    ('user', 'Пользователь'),
+    ('moderator', 'Модератор'),
+    ('admin', 'Админ')]
+
 
 
 class User(AbstractUser):
-    bio = models.TextField(
-        'Биография',
-        blank=True,)
-    role = models.CharField(max_length=1, choices=USER_ROLES, blank=True)
+    username = models.CharField('Логин', max_length=150, unique=True,)
+    first_name = models.CharField('Имя', max_length=150, blank=True,)
+    last_name = models.CharField('Фамилия', max_length=150, blank=True,)
+    password = models.CharField('Пароль', max_length=36, blank=True,)
+    email = models.EmailField(
+        'Почта',
+        max_length=254,
+        blank=False,
+        unique=True,)
+    bio = models.TextField('Биография', blank=True,)
+    role = models.CharField(
+        max_length=9,
+        choices=USER_ROLES,
+        blank=True,
+        default='user')
+    confirmation_code = models.TextField(
+        'Код доступа',
+        max_length=6,
+        blank=True)
 
+    def __str__(self):
+        return f'{(self.username)}'
 
+    class Meta:
+        ordering = ['-id']
