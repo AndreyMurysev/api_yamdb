@@ -5,9 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Genre, Category, Title
 from users.models import User
-
 
 MESS_VAL_LOG = 'Отсутствует обязательное поле или оно некорректно'
 
@@ -32,6 +30,7 @@ class AuthenticationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         fields = ('username',
                   'email',
@@ -61,35 +60,3 @@ class LoginSerializer(TokenObtainPairSerializer):
         if data['confirmation_code'] != user.confirmation_code:
             raise serializers.ValidationError(MESS_VAL_LOG)
         return self.get_tokens_for_user(user)
-
-
-
-class GenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = ('name', 'slug')
-        lookup_field = 'slug'
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('name', 'slug')
-        lookup_field = 'slug'
-
-
-class TitleSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
-        queryset=Category.objects.all(),
-        slug_field='slug',
-    )
-    genre = serializers.SlugRelatedField(
-        queryset=Genre.objects.all(),
-        slug_field='slug',
-        many=True,
-    )
-
-    class Meta:
-        model = Title
-        fields = '__all__'
-
