@@ -6,13 +6,25 @@ from .views import (AuthenticationViewSet,
                     LoginView,
                     UserViewSet,
                     admin_putch_get_delete_users,
-                    user_putch_get_user)
+                    user_putch_get_user,
+                    CategoryViewSet,
+                    TitleViewSet,
+                    GenreViewSet)
 
 router_v1 = DefaultRouter()
 router_v1.register('v1/users', UserViewSet, basename='users')
 router_v1.register('v1/auth/signup',
                    AuthenticationViewSet,
                    basename='autentication')
+
+
+
+router_v1 = DefaultRouter()
+router_v1.register('v1/users', UserViewSet, basename = 'users')
+router_v1.register(r'categories', CategoryViewSet)
+router_v1.register(r'genres', GenreViewSet)
+router_v1.register(r'titles', TitleViewSet)
+
 
 urlpatterns = [
     path('v1/auth/token/',
