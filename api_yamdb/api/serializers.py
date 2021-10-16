@@ -32,10 +32,6 @@ class AuthenticationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-
-
-class UserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('username',
                   'email',
