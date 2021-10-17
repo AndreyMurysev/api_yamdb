@@ -19,8 +19,9 @@ from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
                           GenreSerializer,
                           LoginSerializer,
+                          ReadOnlyTitleSerializer,
                           TitleSerializer,
-                          UserSerializer)
+                          UserSerializer, )
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
 LEN_COD_CONF = 6
@@ -159,6 +160,13 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     pagination_class = CustomUserPagination
 
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
+
+
     def get_permissions(self):
         if self.request.user.is_anonymous:
             return (ReadOnly(),)
@@ -166,3 +174,4 @@ class TitleViewSet(viewsets.ModelViewSet):
            or self.request.user.role == 'admin'):
             return (AdminUrlUserPermission(),)
         return (ReadOnly(),)
+
