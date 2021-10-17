@@ -17,9 +17,12 @@ from .paginations import CustomUserPagination
 from .permisions import AdminUrlUserPermission, AuthorModeratorAdminOrReadOnly, ReadOnly
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
-                          CommentSerializer, GenreSerializer,
+                          CommentSerializer, 
+                          GenreSerializer,
                           LoginSerializer,
-                          ReviewSerializer, TitleSerializer,
+                          ReviewSerializer,
+                          ReadOnlyTitleSerializer,
+                          TitleSerializer,
                           UserSerializer)
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
@@ -128,7 +131,14 @@ class GenreViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    permission_classes = (AdminUrlUserPermission,)
+
+    def get_permissions(self):
+        if self.request.user.is_anonymous:
+            return (ReadOnly(),)
+        if (self.request.user.is_superuser
+           or self.request.user.role == 'admin'):
+            return (AdminUrlUserPermission(),)
+        return (ReadOnly(),)
 
 
 class CategoryViewSet(DestroyCreateListViewSet):
@@ -153,7 +163,22 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
-    permission_classes = (AdminUrlUserPermission,)
+    pagination_class = CustomUserPagination
+
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
+
+
+    def get_permissions(self):
+        if self.request.user.is_anonymous:
+            return (ReadOnly(),)
+        if (self.request.user.is_superuser
+           or self.request.user.role == 'admin'):
+            return (AdminUrlUserPermission(),)
+        return (ReadOnly(),)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

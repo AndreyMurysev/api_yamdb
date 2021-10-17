@@ -120,3 +120,23 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         exclude = ('review',)
         read_only_fields = ('id', 'pub_date')
+
+
+class ReadOnlyTitleSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField(
+        source='reviews__score__avg', read_only=True
+    )
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
+
+    class Meta:
+        model = Title
+        fields = (
+            'id',
+            'name',
+            'year',
+            'description',
+            'genre',
+            'category'
+        )
+
