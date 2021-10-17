@@ -4,3 +4,8 @@ djangorestframework==3.12.4
 pytest==6.2.4
 pytest-django==4.4.0
 pytest-pythonpath==0.7.3
+
+django-filter~=21.1
+django-reviews~=1.2.1
+django-email-users~=1.1.0
+djangorestframework-simplejwt==4.7.2
