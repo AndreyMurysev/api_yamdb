@@ -165,12 +165,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     pagination_class = CustomUserPagination
 
-
     def get_serializer_class(self):
         if self.action in ("retrieve", "list"):
             return ReadOnlyTitleSerializer
         return TitleSerializer
-
 
     def get_permissions(self):
         if self.request.user.is_anonymous:
