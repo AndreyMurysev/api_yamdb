@@ -28,6 +28,7 @@ class User(AbstractUser):
         max_length=6,
         blank=True)
 
+
     def __str__(self):
         return f'{(self.username)}'
 
