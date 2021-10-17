@@ -20,7 +20,7 @@ from .serializers import (AuthenticationSerializer,
                           GenreSerializer,
                           LoginSerializer,
                           TitleSerializer,
-                          UserSerializer)
+                          UserSerializer, ReadOnlyTitleSerializer)
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
 LEN_COD_CONF = 6
@@ -145,4 +145,9 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
     permission_classes = (AdminUrlUserPermission,)
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
 
