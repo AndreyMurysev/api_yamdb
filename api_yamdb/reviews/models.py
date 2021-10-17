@@ -1,6 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from users.models import User
 
 from users.models import User
 
@@ -90,6 +89,7 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
+
 class Review(models.Model):
     title = models.ForeignKey(
         Title,
@@ -118,11 +118,16 @@ class Review(models.Model):
         auto_now_add=True
     )
 
-
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         ordering = ['-pub_date']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='one_review'
+            ),
+        ]
 
 
 class Comment(models.Model):
@@ -145,11 +150,7 @@ class Comment(models.Model):
         auto_now_add=True
     )
 
-
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ['-pub_date']
-
-
-
