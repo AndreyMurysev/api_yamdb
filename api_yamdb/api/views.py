@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.shortcuts import get_object_or_404
 
-from rest_framework import filters, mixins, permissions, status, viewsets,
+from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
