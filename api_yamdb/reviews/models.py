@@ -1,6 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from users.models import User
 
 from users.models import User
 
@@ -15,8 +14,10 @@ class Category(models.Model):
         max_length=32,
         unique=True
     )
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -33,8 +34,10 @@ class Genre(models.Model):
         max_length=32,
         unique=True
     )
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
@@ -72,9 +75,9 @@ class Title(models.Model):
         null=True,
         blank=True
     )
+
     def __str__(self):
         return self.name
-
 
     class Meta:
         verbose_name = 'Произведение'
@@ -85,6 +88,7 @@ class Title(models.Model):
 class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+
 
 class Review(models.Model):
     title = models.ForeignKey(
@@ -114,11 +118,16 @@ class Review(models.Model):
         auto_now_add=True
     )
 
-
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         ordering = ['-pub_date']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='one_review'
+            ),
+        ]
 
 
 class Comment(models.Model):
@@ -141,11 +150,7 @@ class Comment(models.Model):
         auto_now_add=True
     )
 
-
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ['-pub_date']
-
-
-

@@ -1,29 +1,30 @@
 from django.conf import settings
 from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
+from django.db.models import Avg
+from django.http import Http404
 from django.shortcuts import get_object_or_404
-
+from django.utils.crypto import get_random_string
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django_filters.rest_framework import DjangoFilterBackend
 
-
-from reviews.models import Category, Genre, Title
+from reviews.models import Category, Genre, Review, Title
 from users.models import User
 from .filters import TitlesFilter
 from .paginations import CustomUserPagination
-from .permisions import AdminUrlUserPermission, ReadOnly
+from .permisions import AdminUrlUserPermission, AuthorModeratorAdminOrReadOnly, ReadOnly
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
-                          GenreSerializer,
+                          CommentSerializer, GenreSerializer,
                           LoginSerializer,
-                          TitleSerializer,
+                          ReviewSerializer, TitleSerializer,
                           UserSerializer)
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
 LEN_COD_CONF = 6
+NOT_FOUND = 'Запрошенного объекта не существует'
 
 
 class AuthenticationViewSet(viewsets.ModelViewSet):
@@ -75,9 +76,9 @@ def admin_putch_get_delete_users(request, username):
     if request.method == 'PUT':
         return Response(status=status.HTTP_403_FORBIDDEN)
     if (request.user.is_authenticated
-        and (request.user.is_staff
-             or request.user.is_superuser
-             or request.user.role == 'admin')):
+            and (request.user.is_staff
+                 or request.user.is_superuser
+                 or request.user.role == 'admin')):
         user = get_object_or_404(User, username=username)
         if request.method == 'PATCH':
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -141,14 +142,55 @@ class CategoryViewSet(DestroyCreateListViewSet):
         if self.request.user.is_anonymous:
             return (ReadOnly(),)
         if (self.request.user.is_superuser
-           or self.request.user.role == 'admin'):
+                or self.request.user.role == 'admin'):
             return (AdminUrlUserPermission(),)
         return (ReadOnly(),)
 
+
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score')
+    )
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
     permission_classes = (AdminUrlUserPermission,)
 
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = (AuthorModeratorAdminOrReadOnly,)
+    pagination_class = CustomUserPagination
+
+    def get_queryset(self):
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Title, pk=title_id)
+        return title.reviews.all()
+
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Title, pk=title_id)
+        serializer.save(author=self.request.user, title=title)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = (AuthorModeratorAdminOrReadOnly,)
+    pagination_class = CustomUserPagination
+
+    def get_queryset(self):
+        title_id = self.kwargs.get('title_id')
+        review_id = self.kwargs.get('review_id')
+        title = get_object_or_404(Title, pk=title_id)
+        review = get_object_or_404(Review, pk=review_id)
+        if review in title.reviews.all():
+            return review.comments.all()
+        raise Http404(NOT_FOUND)
+
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        review_id = self.kwargs.get('review_id')
+        title = get_object_or_404(Title, pk=title_id)
+        review = get_object_or_404(Review, pk=review_id)
+        if review not in title.reviews.all():
+            raise Http404(NOT_FOUND)
+        serializer.save(author=self.request.user, review=review)
