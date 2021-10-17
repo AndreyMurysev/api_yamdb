@@ -14,7 +14,7 @@ from reviews.models import Category, Genre, Title
 from users.models import User
 from .filters import TitlesFilter
 from .paginations import CustomUserPagination
-from .permisions import AdminUrlUserPermission
+from .permisions import AdminUrlUserPermission, ReadOnly
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
                           GenreSerializer,
@@ -136,8 +136,14 @@ class CategoryViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    permission_classes = (AdminUrlUserPermission,)
 
+    def get_permissions(self):
+        if self.request.user.is_anonymous:
+            return (ReadOnly(),)
+        if (self.request.user.is_superuser
+           or self.request.user.role == 'admin'):
+            return (AdminUrlUserPermission(),)
+        return (ReadOnly(),)
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
