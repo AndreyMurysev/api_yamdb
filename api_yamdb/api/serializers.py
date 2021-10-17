@@ -137,6 +137,7 @@ class ReadOnlyTitleSerializer(serializers.ModelSerializer):
             'year',
             'description',
             'genre',
-            'category'
+            'category',
+            'rating'
         )
 
