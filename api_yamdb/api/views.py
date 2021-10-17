@@ -127,6 +127,7 @@ class GenreViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
+    permission_classes = (AdminUrlUserPermission,)
 
 
 class CategoryViewSet(DestroyCreateListViewSet):
@@ -135,6 +136,7 @@ class CategoryViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
+    permission_classes = (AdminUrlUserPermission,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -142,4 +144,5 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
+    permission_classes = (AdminUrlUserPermission,)
 
