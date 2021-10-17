@@ -2,6 +2,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from users.models import User
 
+from users.models import User
+
 
 class Category(models.Model):
     name = models.CharField(
@@ -84,7 +86,6 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
-
 class Review(models.Model):
     title = models.ForeignKey(
         Title,
@@ -145,3 +146,6 @@ class Comment(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ['-pub_date']
+
+
+

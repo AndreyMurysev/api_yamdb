@@ -3,19 +3,24 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.shortcuts import get_object_or_404
 
-
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import filters, mixins, permissions, status, viewsets,
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django_filters.rest_framework import DjangoFilterBackend
 
+
+from reviews.models import Category, Genre, Title
 from users.models import User
-from .serializers import (AuthenticationSerializer,
-                          LoginSerializer,
-                          UserSerializer)
+from .filters import TitlesFilter
 from .paginations import CustomUserPagination
 from .permisions import AdminUrlUserPermission
+from .serializers import (AuthenticationSerializer,
+                          CategorySerializer,
+                          GenreSerializer,
+                          LoginSerializer,
+                          TitleSerializer,
+                          UserSerializer)
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
 LEN_COD_CONF = 6
@@ -105,3 +110,36 @@ def user_putch_get_user(request):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class DestroyCreateListViewSet(
+    mixins.DestroyModelMixin,
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    pass
+
+
+class GenreViewSet(DestroyCreateListViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    search_fields = ('name',)
+    lookup_field = 'slug'
+    filter_backends = (filters.SearchFilter,)
+
+
+class CategoryViewSet(DestroyCreateListViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    search_fields = ('name',)
+    lookup_field = 'slug'
+    filter_backends = (filters.SearchFilter,)
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    filterset_class = TitlesFilter
+    filter_backends = [DjangoFilterBackend]
+
