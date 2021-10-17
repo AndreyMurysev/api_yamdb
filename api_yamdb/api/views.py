@@ -14,7 +14,7 @@ from reviews.models import Category, Genre, Title
 from users.models import User
 from .filters import TitlesFilter
 from .paginations import CustomUserPagination
-from .permisions import AdminUrlUserPermission
+from .permisions import AdminUrlUserPermission, IsAdminOrReadOnly
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
                           GenreSerializer,
@@ -127,6 +127,7 @@ class GenreViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
+    permission_classes = (IsAdminOrReadOnly,)
 
 
 class CategoryViewSet(DestroyCreateListViewSet):
@@ -135,6 +136,7 @@ class CategoryViewSet(DestroyCreateListViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
+    permission_classes = (IsAdminOrReadOnly,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -142,4 +144,5 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
+    permission_classes = (IsAdminOrReadOnly,)
 
