@@ -71,22 +71,3 @@ pip install -r requirements.txt
 python3 manage.py makemigration
 python3 manage.py migrate
 ```
-
-Заполнить базу данных через add_data:
-```
-python manage.py add_data <data_type>
-```
-где <data type> - это тип данных совпадающих с названием файлов csv. 
-Файлы должны лежать в оригинальной папке api_yamdb\api_yamdb\static\data
-Команду необходимо выполнить последовательно:
-```
-users
-category
-genre
-titles
-genre_title
-review
-comments
-```
-
-
