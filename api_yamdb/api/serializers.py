@@ -141,4 +141,3 @@ class ReadOnlyTitleSerializer(serializers.ModelSerializer):
             'category',
             'rating'
         )
-

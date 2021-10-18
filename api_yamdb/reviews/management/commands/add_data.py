@@ -31,7 +31,7 @@ class Command(BaseCommand):
             path = os.path.join(PATH, filename)
             self.stdout.write(path)
             try:
-                with open(path, 'r', encoding="utf-8") as f:
+                with open(path, 'r', encoding='utf-8') as f:
                     reader = csv.DictReader(f)
                     data = []
                     for row in reader:
@@ -114,8 +114,7 @@ class Command(BaseCommand):
                             pk=relation.get('title_id')
                         ),
                         genre=Genre.objects.get(
-                            pk=relation.get('genre_id')
-                    )
+                            pk=relation.get('genre_id'))
                     )
                     for relation in data
                 ]
@@ -128,7 +127,8 @@ class Command(BaseCommand):
                 list_of_reviews = [
                     Review(
                         id=review_data.get('id'),
-                        title=Title.objects.get(pk=review_data.get('title_id')),
+                        title=Title.objects.get(
+                            pk=review_data.get('title_id')),
                         text=review_data.get('text'),
                         author=User.objects.get(pk=review_data.get('author')),
                         score=review_data.get('score')
