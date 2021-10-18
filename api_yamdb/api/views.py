@@ -18,11 +18,11 @@ from .permisions import AdminUrlUserPermission, AuthorModeratorAdminOrReadOnly, 
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
                           CommentSerializer, 
-                          GenreSerializer,
+                          CommentSerializer, GenreSerializer,
                           LoginSerializer,
                           ReviewSerializer,
                           ReadOnlyTitleSerializer,
-                          TitleSerializer,
+                          ReviewSerializer, TitleSerializer,
                           UserSerializer)
 
 MESS_TOPIC_MAIL = 'Код подтверждения'
@@ -158,8 +158,7 @@ class CategoryViewSet(DestroyCreateListViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score')
-    )
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
     filterset_class = TitlesFilter
     filter_backends = [DjangoFilterBackend]
@@ -174,7 +173,7 @@ class TitleViewSet(viewsets.ModelViewSet):
         if self.request.user.is_anonymous:
             return (ReadOnly(),)
         if (self.request.user.is_superuser
-           or self.request.user.role == 'admin'):
+                or self.request.user.role == 'admin'):
             return (AdminUrlUserPermission(),)
         return (ReadOnly(),)
 
