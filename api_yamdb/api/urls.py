@@ -3,7 +3,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (AuthenticationViewSet,
-                    CommentViewSet, ReviewViewSet, admin_putch_get_delete_users,
+                    CommentViewSet,
+                    ReviewViewSet,
+                    admin_putch_get_delete_users,
                     user_putch_get_user,
                     CategoryViewSet,
                     GenreViewSet,

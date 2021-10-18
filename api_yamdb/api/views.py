@@ -14,11 +14,14 @@ from reviews.models import Category, Genre, Review, Title
 from users.models import User
 from .filters import TitlesFilter
 from .paginations import CustomUserPagination
-from .permisions import AdminUrlUserPermission, AuthorModeratorAdminOrReadOnly, ReadOnly
+from .permisions import (AdminUrlUserPermission,
+                         AuthorModeratorAdminOrReadOnly,
+                         ReadOnly)
 from .serializers import (AuthenticationSerializer,
                           CategorySerializer,
-                          CommentSerializer, 
-                          CommentSerializer, GenreSerializer,
+                          CommentSerializer,
+                          CommentSerializer,
+                          GenreSerializer,
                           LoginSerializer,
                           ReviewSerializer,
                           ReadOnlyTitleSerializer,
@@ -165,7 +168,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = CustomUserPagination
 
     def get_serializer_class(self):
-        if self.action in ("retrieve", "list"):
+        if self.action in ('retrieve', 'list'):
             return ReadOnlyTitleSerializer
         return TitleSerializer
 

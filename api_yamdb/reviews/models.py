@@ -84,6 +84,7 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
         ordering = ['id']
 
+
 class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
