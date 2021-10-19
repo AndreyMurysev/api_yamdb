@@ -1,8 +1,7 @@
 from django.contrib import admin
+from django.conf import settings
 
 from .models import User
-
-VOID = '-пусто-'
 
 
 @admin.register(User)
@@ -13,4 +12,4 @@ class UserAdmin(admin.ModelAdmin):
                     'last_name',
                     'email',
                     'role')
-    empty_value_display = VOID
+    empty_value_display = settings.VOID
