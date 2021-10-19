@@ -37,8 +37,11 @@ NOT_FOUND = 'Запрошенного объекта не существует'
 class AuthenticationViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = AuthenticationSerializer
-    permission_classes = (permissions.AllowAny,)
     pagination_class = None
+    permission_classes = (permissions.AllowAny,)
+
+    def get_permissions(self):
+        return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
