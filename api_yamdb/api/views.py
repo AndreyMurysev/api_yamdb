@@ -5,7 +5,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, permissions, status, viewsets
+from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -13,6 +13,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 from .filters import TitlesFilter
+from .mixins import DestroyCreateListViewSet
 from .paginations import CustomUserPagination
 from .permisions import (AdminUrlUserPermission,
                          AuthorModeratorAdminOrReadOnly,
@@ -117,15 +118,6 @@ def user_putch_get_user(request):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-class DestroyCreateListViewSet(
-    mixins.DestroyModelMixin,
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    pass
 
 
 class GenreViewSet(DestroyCreateListViewSet):

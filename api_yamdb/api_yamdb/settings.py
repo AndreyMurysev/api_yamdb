@@ -122,3 +122,5 @@ EMAIL_USE_SSL = False
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer'),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=600)}
+
+VOID = '-пусто-'

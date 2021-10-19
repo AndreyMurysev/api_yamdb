@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-USER_ROLES = [
+USER_ROLES = (
     ('user', 'Пользователь'),
     ('moderator', 'Модератор'),
-    ('admin', 'Админ')]
+    ('admin', 'Админ'),)
 
 
 class User(AbstractUser):
@@ -32,4 +32,4 @@ class User(AbstractUser):
         return f'{(self.username)}'
 
     class Meta:
-        ordering = ['-id']
+        ordering = ('-id',)
