@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from users.models import User
+from .validators import validate_year
 
 
 class Category(models.Model):
@@ -11,7 +12,7 @@ class Category(models.Model):
         unique=True
     )
     slug = models.SlugField(
-        max_length=32,
+        max_length=50,
         unique=True
     )
 
@@ -21,7 +22,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-        ordering = ['name']
+        ordering = ('name',)
 
 
 class Genre(models.Model):
@@ -41,7 +42,7 @@ class Genre(models.Model):
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
-        ordering = ['name']
+        ordering = ('name',)
 
 
 class Title(models.Model):
@@ -64,10 +65,11 @@ class Title(models.Model):
         blank=True,
         null=True
     )
-    year = models.IntegerField(
+    year = models.PositiveIntegerField(
         verbose_name='Дата выхода',
         db_index=True,
         null=True,
+        validators=(validate_year,)
     )
     description = models.CharField(
         verbose_name='Описание',
@@ -82,7 +84,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-        ordering = ['id']
+        ordering = ('id',)
 
 
 class GenreTitle(models.Model):
@@ -121,13 +123,13 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ['-pub_date']
-        constraints = [
+        ordering = ('-pub_date',)
+        constraints = (
             models.UniqueConstraint(
-                fields=['title', 'author'],
+                fields=('title', 'author'),
                 name='one_review'
             ),
-        ]
+        )
 
 
 class Comment(models.Model):
@@ -153,4 +155,4 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
