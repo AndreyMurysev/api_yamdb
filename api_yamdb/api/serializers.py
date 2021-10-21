@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
-MESS_VAL_LOG = 'Отсутствует обязательное поле или оно некорректно'
+MESS_VAL_LOG = 'Поле {} отсутствует или оно некорректно'
 SINGLE_REVIEW = 'Можно оставить только один отзыв'
 
 
@@ -25,7 +25,7 @@ class AuthenticationSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data['username'] in ('me', 'Me'):
-            raise ValidationError(MESS_VAL_LOG)
+            raise ValidationError(MESS_VAL_LOG.format('username'))
         return data
 
 
@@ -56,7 +56,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, data):
         user = get_object_or_404(User, username=data['username'])
         if data['confirmation_code'] != user.confirmation_code:
-            raise serializers.ValidationError(MESS_VAL_LOG)
+            raise ValidationError(MESS_VAL_LOG.format('confirmation_code'))
         return self.get_tokens_for_user(user)
 
 
