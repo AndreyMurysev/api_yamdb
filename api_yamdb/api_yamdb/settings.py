@@ -15,7 +15,7 @@ SECRET_KEY = env('SECRET_KEY', default=None)
 
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = env('ALLOWED_HOSTS', default='["*"]')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='["*"]')
 
 AUTH_USER_MODEL = 'users.User'
 
