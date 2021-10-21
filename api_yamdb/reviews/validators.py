@@ -7,4 +7,4 @@ def validate_year(value):
         raise ValidationError(
             ('Год %(value)s больше текущего!'),
             params={'value': value},
-        ) 
+        )

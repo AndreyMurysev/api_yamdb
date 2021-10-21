@@ -7,6 +7,7 @@ from .validators import validate_year
 MAX_SCORE = 'Максимальная оценка'
 MIN_SCORE = 'Минимальная оценка'
 
+
 class Category(models.Model):
     name = models.CharField(
         verbose_name='Категория',
@@ -69,11 +70,9 @@ class Title(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        validators=(validate_year,), 
-        verbose_name="Дата выхода"
+        validators=(validate_year,),
+        verbose_name='Дата выхода'
     )
-
-
     description = models.CharField(
         verbose_name='Описание',
         max_length=256,
