@@ -43,20 +43,12 @@ class AuthenticationViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         return [permission() for permission in self.permission_classes]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer, serializer.data['email'])
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data,
-                        status=status.HTTP_200_OK,
-                        headers=headers)
-
-    def perform_create(self, serializer, email):
+    def perform_create(self, serializer):
+        email = serializer.validated_data['email']
         confirmation_code = get_random_string(length=LEN_COD_CONF)
-        serializer.save(
-            confirmation_code=confirmation_code)
+        serializer.save(confirmation_code=confirmation_code)
         self.send_message(confirmation_code, email)
+
 
     def send_message(self, confirmation_code, email):
         send_mail(

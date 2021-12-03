@@ -16,13 +16,6 @@ class AuthenticationSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email')
 
-    def save(self, *args, **kwargs):
-        user = User(
-            email=self.validated_data['email'],
-            username=self.validated_data['username'], )
-        user.save()
-        return user
-
     def validate(self, data):
         if data['username'] in ('me', 'Me'):
             raise ValidationError(MESS_VAL_LOG.format('username'))
