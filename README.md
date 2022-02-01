@@ -75,7 +75,7 @@ python3 manage.py migrate
 ```
 
 ### Системные требования
-Python 3.9.4
+Python 3.9.4  
 Django 2.2.16
 
 
