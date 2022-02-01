@@ -72,12 +72,18 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Выполнить миграции:
+- Сделать миграции, создать суперпользователя и собрать статику:
 
 ```
 python3 manage.py makemigration
 python3 manage.py migrate
+python3 manage.py createsuperuser
+python3 manage.py collectstatic --no-input 
 ```
+
+**Проект будет доступен по адресу:** _http://127.0.0.1/api/v1/_  
+**Документация API:** _http://127.0.0.1/redoc/_
+
 
 ## Команда разработчиков:
  - https://github.com/AlexeyRudnev
