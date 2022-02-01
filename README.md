@@ -79,12 +79,14 @@ python3 manage.py makemigration
 python3 manage.py migrate
 ```
 
-
-
-Команда разработчиков:
+## Команда разработчиков:
  - https://github.com/AlexeyRudnev
  - https://github.com/Alexander_Niyazov
  - https://github.com/AndreyMurysev
+
+### Для связи с разработчиками:
+**email:** _andreimurysev@yandex.ru_  
+**telegram:** _@andrey_murysev_  
 
 Авторское право (c) 2021 AAA
 
