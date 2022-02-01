@@ -35,7 +35,7 @@
 письмо с кодом подтверждения. Далее пользователь отправляет POST-запрос с параметрами username и confirmation_code на эндпоинт /api/v1/auth/token/, 
 в ответе на запрос ему приходит token (JWT-токен), как и при самостоятельной регистрации.
 
-### Как запустить проект:
+### Инструкция по развёртыванию:
 
 Клонировать репозиторий и перейти в него в командной строке:
 
@@ -73,6 +73,12 @@ pip install -r requirements.txt
 python3 manage.py makemigration
 python3 manage.py migrate
 ```
+
+### Системные требования
+Python 3.9.4
+Django 2.2.16
+
+
 Команда разработчиков:
  - https://github.com/AlexeyRudnev
  - https://github.com/Alexander_Niyazov
