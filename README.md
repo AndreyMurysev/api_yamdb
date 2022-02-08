@@ -4,6 +4,12 @@
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
 [![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat-square&logo=Django%20REST%20Framework)](https://www.django-rest-framework.org/)
 
+## Системные требования:
+Python 3.9.7  
+Django 2.2.16  
+Django REST framework 3.12.4  
+PyJWT 2.1.0  
+
 ## Описание:
 
 Проект YaMDb собирает отзывы (Review) пользователей на произведения (Titles). Произведения делятся на категории: «Книги», «Фильмы», 
